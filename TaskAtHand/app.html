@@ -5,6 +5,7 @@
 	<title>Task@Hand</title>
 	<script src="lib/jquery.js"></script>
 	<script src="appStorage.js"></script>
+	<script src="taskList.js"></script>
 	<script src="taskAtHand.js"></script>
 	<link href="taskAtHand.css" rel="stylesheet"/>
 	<link id="theme-style" href="themes/blue.css" rel="stylesheet"/>
@@ -33,13 +34,36 @@
 	<div id="templates" class="hidden">
 		<ul id="task-template">
 			<li class="task">
+				<button class="toggle-details"></button>
+				<span class="task-name"></span>
+				<input type="text" class="task-name hidden"/>
 				<div class="tools">
 					<button class="delete" title="Delete">X</button>
 					<button class="move-up" title="Up">^</button>
 					<button class="move-down" title="Down">v</button>
 				</div>
-				<span class="task-name"></span>
-				<input type="text" class="task-name hidden"/>
+				<div class="details">
+					<label>Start date:</label>
+					<input type="date" data-field="startDate"/><br/>
+					<label>Due date:</label>
+					<input type="date" data-field="dueDate"/><br/>
+					<label>Status:</label>
+					<select data-field="status">
+						<option value="0">None</option>
+						<option value="1">Not Started</option>
+						<option value="2">Started</option>
+						<option value="3">Completed</option>
+					</select><br/>
+					<label>Priority:</label>
+					<select data-field="priority">
+						<option value="0">None</option>
+						<option value="1">Low</option>
+						<option value="2">Normal</option>
+						<option value="3">High</option>
+					</select><br/>
+					<label>Complete:</label>
+					<input type="number" data-field="pctComplete" min="0" max="100" step="10" value="0"/>
+				</div>
 			</li>
 		</ul>
 	</div>
