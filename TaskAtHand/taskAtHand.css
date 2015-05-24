@@ -35,7 +35,6 @@ button {
 #app > header, #app footer {
 	padding: 0 0.5em;
 	font-size: 1.5em;
-	background-color: #fafafa;
 }
 #app > footer {
 	position: absolute;
