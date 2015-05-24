@@ -1,0 +1,118 @@
+html, body, div {
+	margin; 0;
+	padding: 0;
+}
+ul, ol {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+body {
+	font: 1em Verdana, Geneva, sans-serif;
+	padding: 0;
+	margin: 5px;
+	color: Black;
+	background-color: WhiteSmoke;
+}
+div {
+	padding: 0;
+	margin: 0;
+}
+button {
+	cursor: pointer;
+}
+.hidden {
+	display: none;
+}
+#app {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 4px;
+}
+#app > header, #app footer {
+	padding: 0 0.5em;
+	font-size: 1.5em;
+	background-color: #fafafa;
+}
+#app > footer {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+}
+#main {
+	max-width: 25em;
+	min-width: 9em;
+	margin: 1em auto;
+}
+#task-list .task .tools {
+	position: absolute;
+	top: 0.25em;
+	right: 0.25em;
+	border: 1px solid black;
+	border-radius: 2px;
+	opacity: 0;
+	-webkit-transition: all 0.25s ease;
+	-moz-transition: all 0.25s ease;
+	-o-transition: all 0.25s ease;
+	transition: all 0.25s ease;
+}
+#task-list .task:hover .tools,
+#task-list .task.selected .tools {
+	opacity: 1;
+}
+#task-list .task .tools button {
+	margin: 0;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+	border: none;
+	background: url(images/icons.png);
+}
+#task-list .task .tools button.delete {
+	background-position: 0 0;
+}
+#task-list .task .tools button.move-up {
+	background-position: -16px 0;
+}
+#task-list .task .tools button.move-down {
+	background-position: -32px 0;
+}
+#task-name {
+	font-size: 1em;
+	display: block;
+	width: 98%;
+}
+#task-list {
+	width: 100%;
+}
+#task-list .task {
+	position: relative;
+	list-style: none;
+	padding: 0.25em 0;
+	margin: 0.25em 0;
+	background-color: beige;
+	border-radius: 4px;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+	-webkit-transition: all 0.25s ease;
+	-moz-transition: all 0.25s ease;
+	-o-transition: all 0.25s ease;
+	transition: all 0.25s ease;
+}
+#task-list .task.selected {
+	padding: 0.6em 0.5em;
+	border: 2px solid orange;
+	border-radius: 6px;
+	background-color: white;
+}
+#toolbar {
+	padding: 0.25em;
+	font-size: 0.8em;
+	color: WhiteSmoke;
+	background-color: rgba(0, 0., 0, 0.4);
+}

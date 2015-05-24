@@ -44,6 +44,18 @@ function TaskAtHand() {
 			$(this).hide().siblings('span.task-name').show();
 		});
 
+		$task.click(function () {
+			console.log('click');
+			onSelectTask($task);
+		});
+
+		function onSelectTask($task) {
+			if ($task) {
+				$task.siblings('.selected').removeClass('selected');
+				$task.addClass('selected');
+			}
+		}
+
 		saveTaskList();
 	}
 
@@ -53,6 +65,14 @@ function TaskAtHand() {
 			for (var i in tasks) {
 				addTaskElement(tasks[i]);
 			}
+		}
+	}
+
+	function loadTheme() {
+		var theme = appStorage.getValue('theme');
+		if (theme) {
+			setTheme(theme);
+			$('#theme > option[value=' + theme  +']').attr('selected', 'selected');
 		}
 	}
 
@@ -95,6 +115,18 @@ function TaskAtHand() {
 		appStorage.setValue('taskList', tasks);
 	}
 
+	$('#theme').change(onChangeTheme);
+
+	function onChangeTheme() {
+		var theme = $('#theme > option').filter(':selected').val();
+		setTheme(theme);
+		appStorage.setValue('theme', theme);
+	}
+
+	function setTheme(theme) {
+		$('#theme-style').attr('href', 'themes/' + theme + '.css');
+	}
+
 	this.start = function () {
 
 		$('#new-task-name').keypress(function (e) {
@@ -107,6 +139,7 @@ function TaskAtHand() {
 		$('#app > header').append(version);
 		setStatus('ready');
 		loadTaskList();
+		loadTheme();
 	};
 }
 $(function () {

@@ -1,0 +1,11 @@
+#app {
+	background: color: #bcb;
+	background: -webkit-linear-gradient(top, #bcb, #585);
+	background: -moz-linear-gradient(top, #bcb, #585);
+	background: -ms-linear-gradient(top, #bcb, #585);
+	background: linear-gradient(top, #bcb, #585);
+}
+#app > header,
+#app > footer {
+	background-color: #bcb;
+}
