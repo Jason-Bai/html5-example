@@ -14,10 +14,12 @@ function Toolbar($toolbar) {
 	}
 
 	$('button', $toolbar).click(function (e) {
+		e.stopPropagation();
 		onToolbarButtonClicked($(this));
 	});
 
 	$('.menu > li', $toolbar).click(function (e) {
+		e.stopPropagation();
 		onMenuItemClicked($(this));
 	});
 

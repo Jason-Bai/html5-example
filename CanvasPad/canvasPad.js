@@ -270,6 +270,10 @@ function CanvasPadApp() {
 				actions.pop();
 				redraw();
 				break;
+			case 'save':
+				var url = $('#main > canvas')[0].toDataURL();
+				window.open(url, 'CanvasPadImage');
+				break;
 		}
 	}
 
@@ -319,6 +323,10 @@ function CanvasPadApp() {
 			.mouseout(onMouseUp);
 		toolbar.toolbarButtonClicked = toolbarButtonClicked;
 		toolbar.menuItemClicked = menuItemClicked;
+		
+		$(window).click(function () {
+			toolbar.hideMenus();
+		});
 
 		initColorMenu();
 		initWidthMenu();
