@@ -81,5 +81,7 @@ button {
 	width: 8em;
 }
 #text-input input {
+	border: none;
+	outline: none;
 	font-size: 24px;
 }

@@ -103,6 +103,26 @@ function Canvas2D($canvas) {
 		}
 	};
 
+	this.drawEllipse = function (center, endPoint, fill) {
+		var rx = Math.abs(endPoint.x - center.x);
+		var ry = Math.abs(endPoint.y - center.y);
+		var radius = Math.max(rx, ry);
+		var scaleX = rx / radius;
+		var scaleY = ry / radius;
+
+		context.save();
+		context.translate(center.x, center.y);
+		context.scale(scaleX, scaleY);
+		context.beginPath();
+		context.arc(0, 0, radius, 0, Math.PI * 2, true);
+		context.closePath();
+		if (fill) context.fill();
+		else context.stroke();
+		context.restore();
+
+		return this;
+	};
+
 	this.savePen = function () {
 		context.save();
 		return this;
@@ -186,6 +206,9 @@ function CanvasPadApp() {
 					break;
 				case 'text':
 					canvas2d.drawText(action.font, action.text, action.points[0], action.fill);
+					break;
+				case 'ellipse':
+					canvas2d.drawEllipse(action.points[0], action.points[1], action.fill);
 					break;
 			}
 		}
