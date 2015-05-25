@@ -60,6 +60,40 @@ function Canvas2D($canvas) {
 		return this;
 	};
 
+	this.drawLine = function (point1, point2) {
+		context.beginPath();
+		context.moveTo(point1.x, point1.y);
+		context.lineTo(point2.x, point2.y);
+		context.stroke();
+		return this;
+	};
+
+	this.drawRect = function (point1, point2, fill) {
+		var w = point2.x - point1.x,
+				h = point2.y - point1.y;
+		if (fill) context.fillRect(point1.x, point1.y, w, h);
+		else context.strokeRect(point1.x, point1.y, w, h);
+		return this;
+	};
+
+	this.drawCircle = function (center, radius, fill) {
+			context.beginPath();
+			context.arc(center.x, center.y, radius, 0, 2 * Math.PI, true);
+			if (fill) context.fill();
+			else context.stroke();
+			return this;
+	};
+
+	this.savePen = function () {
+		context.save();
+		return this;
+	};
+
+	this.restorePen = function () {
+		context.restore();
+		return this;
+	};
+
 
 	$(window).resize(function () {
 		pageOffset = $canvas.offset();
@@ -69,10 +103,24 @@ function Canvas2D($canvas) {
 function CanvasPadApp() {
 	var version = '4.1',
 			canvas2d = new Canvas2D($('#main > canvas')),
+			toolbar = new Toolbar($('#toolbar')),
 			drawing = false,
 			points = [],
-			actions = [];
+			curTool = 'pen',
+			curAction = newAction(curAction),
+			actions = [],
+			fillShapes = true;
 
+	function newAction(tool) {
+		return {
+			tool: tool,
+			color: canvas2d.penColor(),
+			width: canvas2d.penWidth(),
+			opacity: canvas2d.penOpacity(),
+			fill: fillShapes,
+			points: []
+		};
+	}
 
 	function onMouseMove(e) {
 		penMoved(e.pageX, e.pageY);
@@ -83,16 +131,44 @@ function CanvasPadApp() {
 		showCoordinates(canvasPoint);
 
 		if (drawing) {
-			points.push(canvasPoint);
+			if (curTool == 'pen') {
+				curAction.points.push(canvasPoint);
+			} else {
+				curAction.points[1] = canvasPoint;
+			}
 			redraw();
 		}
 	} 
 
 	function redraw() {
 		canvas2d.clear();
+		canvas2d.savePen();
+
 		for (var i in actions){
-			canvas2d.drawPoints(actions[i]);				
+			var action = actions[i];
+			canvas2d.penColor(action.color)
+							.penWidth(action.width)
+							.penOpacity(action.opacity);
+			switch (action.tool) {
+				case 'pen':
+					canvas2d.drawPoints(action.points);
+					break;
+				case 'line':
+					canvas2d.drawLine(action.points[0], action.points[1]);
+					break;
+				case 'rect':
+					canvas2d.drawRect(action.points[0], action.points[1], action.fill);
+					break;
+				case 'circle':
+					var dx = Math.abs(action.points[1].x - action.points[0].x);
+					var dy = Math.abs(action.points[1].y - action.points[0].y);;
+					var radius = Math.min(dx, dy);
+					canvas2d.drawCircle(action.points[0], radius, action.fill);
+					break;
+			}
 		}
+
+		canvas2d.restorePen();
 	}
 
 	function showCoordinates(point) {
@@ -106,9 +182,9 @@ function CanvasPadApp() {
 
 	function penDown(x, y) {
 		drawing = true;
-		points = [];
-		points.push(canvas2d.getCanvasPoint(x, y));
-		actions.push(points);
+		curAction = newAction(curTool);
+		curAction.points.push(canvas2d.getCanvasPoint(x, y));
+		actions.push(curAction);
 	}
 
 
@@ -117,7 +193,52 @@ function CanvasPadApp() {
 	}
 
 	function penUp() {
-		drawing = false;
+		if (drawing) {
+			drawing = false;
+			if (curAction.points.length < 2) {
+				actions.pop();
+			}
+		}
+	}
+
+	function toolbarButtonClicked(action) {
+		switch (action) {
+			case 'clear':
+				if (confirm('Clear the canvas?')) {
+					actions = [];
+					redraw();
+				}
+				break;
+			case 'undo':
+				actions.pop();
+				redraw();
+				break;
+		}
+	}
+
+	function menuItemClicked(option, value) {
+		switch (option) {
+			case 'drawingTool':
+				curTool = value;
+				break;
+			case 'fillShapes':
+				fillShapes = Boolean(value);
+				break;
+			default:
+				canvas2d[option](value);
+		}
+	}
+
+	function initColorMenu() {
+		$('#color-menu li').each(function (i, e) {
+			$(e).css('background-color', $(e).data('value'));
+		});
+	}
+
+	function initWidthMenu() {
+		$('#width-menu li').each(function (i, e) {
+			$(e).css('border-bottom', $(e).data('value') + 'px solid black');
+		});
 	}
 
 	this.start = function () {
@@ -127,6 +248,11 @@ function CanvasPadApp() {
 			.mousedown(onMouseDown)
 			.mouseup(onMouseUp)
 			.mouseout(onMouseUp);
+		toolbar.toolbarButtonClicked = toolbarButtonClicked;
+		toolbar.menuItemClicked = menuItemClicked;
+
+		initColorMenu();
+		initWidthMenu();
 	};
 }
 

@@ -4,6 +4,7 @@
 		<meta charset="UTF-8"/>
 		<title>CanvasPad</title>
 		<script src="lib/jquery.js"></script>
+		<script src="toolbar.js"></script>
 		<script src="canvasPad.js"></script>
 		<link rel="stylesheet" href="canvasPad.css"/>
 	</head>
@@ -12,6 +13,22 @@
 			<header></header>
 			<div id="main">
 				<div id="toolbar">
+					<div class="dropdown-menu">
+						<button data-action="menu">Tool</button>
+						<ul data-option="drawingTool" class="menu">
+							<li data-value="pen" class="selected">Pen</li>
+							<li data-value="line">Line</li>
+							<li data-value="rect">Rectangle</li>
+							<li data-value="circle">Circle</li>
+						</ul>
+					</div>
+					<div class="dropdown-menu">
+						<button data-action="menu">Fill</button>
+						<ul data-option="fillShapes" class="menu">
+							<li data-value="true" class="selected">Yes</li>
+							<li data-value="false">No</li>
+						</ul>
+					</div>
 					<div class="dropdown-menu">
 						<button data-action="menu">Color</button>
 						<ul id="color-menu" data-option="penColor" class="menu">
