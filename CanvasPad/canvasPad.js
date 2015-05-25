@@ -11,6 +11,8 @@ function Canvas2D($canvas) {
 	context.globalAlpha = 1.0;
 	context.lineJoin = 'round';
 	context.lineCap = 'round';
+	context.font = '24px Verdana, Geneva, sans-serif';
+	context.textBaseline = 'top';
 
 	var pageOffset = $canvas.offset();
 
@@ -43,6 +45,14 @@ function Canvas2D($canvas) {
 			return this;
 		}
 		return context;
+	};
+
+	this.font = function (newFont) {
+		if (arguments.length) {
+			context.font = newFont + ' Verdana, Geneva, sans-serif';
+			return this;
+		}
+		return context.font;
 	};
 
 	this.clear = function () {
@@ -82,6 +92,15 @@ function Canvas2D($canvas) {
 			if (fill) context.fill();
 			else context.stroke();
 			return this;
+	};
+
+	this.drawText = function (font, text, point, fill) {
+		context.font = font;
+		if (fill) {
+			context.fillText(text, point.x, point.y);
+		} else {
+			context.strokeText(text, point.x, point.y);
+		}
 	};
 
 	this.savePen = function () {
@@ -165,6 +184,9 @@ function CanvasPadApp() {
 					var radius = Math.min(dx, dy);
 					canvas2d.drawCircle(action.points[0], radius, action.fill);
 					break;
+				case 'text':
+					canvas2d.drawText(action.font, action.text, action.points[0], action.fill);
+					break;
 			}
 		}
 
@@ -181,10 +203,22 @@ function CanvasPadApp() {
 	}
 
 	function penDown(x, y) {
-		drawing = true;
+		if (curTool == 'text') {
+			if ($('#text-input').is(':visible')) return;
+			showTextInput(x, y);
+		} else {
+			drawing = true;
+		}
 		curAction = newAction(curTool);
 		curAction.points.push(canvas2d.getCanvasPoint(x, y));
 		actions.push(curAction);
+	}
+
+	function showTextInput(pageX, pageY) {
+		$('#text-input').css('top', pageY)
+									  .css('left', pageX)
+										.fadeIn('fast');
+		$('#text-input input').val('').focus();
 	}
 
 
@@ -241,6 +275,18 @@ function CanvasPadApp() {
 		});
 	}
 
+	function checkTextInput(key) {
+		if (key == 13) {
+			curAction.text = $('#text-input input').val();
+			curAction.font = canvas2d.font();
+			$('#text-input').hide();
+			redraw();
+		} else if (key == 27) {
+			actions.pop();
+			$('#text-input').hide();
+		}
+	}
+
 	this.start = function () {
 		$('#app header').append(version);
 		$('#main > canvas')
@@ -253,6 +299,10 @@ function CanvasPadApp() {
 
 		initColorMenu();
 		initWidthMenu();
+
+		$('#text-input input').keydown(function (e) {
+			checkTextInput(e.which);
+		});
 	};
 }
 
