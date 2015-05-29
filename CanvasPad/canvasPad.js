@@ -314,13 +314,38 @@ function CanvasPadApp() {
 		}
 	}
 
+	function onTouchStart(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		penDown(e.touches[0].pageX, e.touches[0].pageY);
+	}
+
+	function onTouchMove(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		penMoved(e.touches[0].pageX, e.touches[0].pageY);	
+	}
+
+	function onTouchEnd(e) {
+		penUp();
+	}
+
 	this.start = function () {
 		$('#app header').append(version);
-		$('#main > canvas')
-			.mousemove(onMouseMove)
-			.mousedown(onMouseDown)
-			.mouseup(onMouseUp)
-			.mouseout(onMouseUp);
+		if ($.isTouchSupported) {
+			console.log('touch');
+			$('#main > canvas')
+				.touchstart(onTouchStart)
+				.touchmove(onTouchMove)
+				.touchend(onTouchEnd);
+		} else {
+			console.log('mouse');
+			$('#main > canvas')
+				.mousemove(onMouseMove)
+				.mousedown(onMouseDown)
+				.mouseup(onMouseUp)
+				.mouseout(onMouseUp);
+		}
 		toolbar.toolbarButtonClicked = toolbarButtonClicked;
 		toolbar.menuItemClicked = menuItemClicked;
 		

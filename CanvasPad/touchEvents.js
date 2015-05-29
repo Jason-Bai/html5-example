@@ -20,5 +20,5 @@
 		return this;
 	};
 
-	$.isTouchSupported = ('ontouchstart' in document.documentElement);
+	$.isTouchSupported = ('ontouchstart' in window);
 })(jQuery);
